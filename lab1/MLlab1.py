@@ -4,8 +4,10 @@ import numpy as np
 import time
 import math
 from mpl_toolkits.mplot3d import Axes3D
-#import matplotlib.animation as animation
+import matplotlib.animation as animation
 from random import randint
+
+
 
 def fanc1 (x,y):      # Функция Матьяса  -10:10
     return 0.26 * (x*x + y*y) - 0.48*x*y
@@ -39,20 +41,125 @@ def dy3(x,y):
 
 
 
+def getplot2d(axissize, func, inlog):
+
+    xgrid, ygrid = np.meshgrid(axissize, axissize)
+    zgrid = func(xgrid,ygrid)
+    fig = plt.figure(figsize=(10, 8))
+    ax = fig.add_subplot(projection='3d', elev = 47, azim = -43)
+    
+    ax_3d.contour(xgrid, ygrid, zgrid, cmap='rainbow')
+    # ax_3d.plot_surface(xgrid, ygrid, zgrid, cmap='rainbow', alpha=0.5)
+
+    # for i in range(len(inlog) - 1):
+    #     ax_3d.plot(np.linspace(inlog[i][0], inlog[i+1][0], 2),np.linspace(inlog[i][1], inlog[i+1][1], 2),np.linspace(inlog[i][2], inlog[i+1][2], 2), c='green', alpha = 1)
+    
+    # ax_3d.scatter(inlog[(len(inlog))-1][0],inlog[(len(inlog))-1][1],inlog[(len(inlog))-1][2], c='red')
+    
+    for i in range(len(inlog) - 1):
+        ax_3d.plot(np.linspace(inlog[i][0], inlog[i+1][0], 2),np.linspace(inlog[i][1], inlog[i+1][1], 2),np.linspace(inlog[i][2], inlog[i+1][2], 2), c='green', alpha = 1)
+    
+    ax_3d.scatter(inlog[(len(inlog))-1][0],inlog[(len(inlog))-1][1],inlog[(len(inlog))-1][2], c='red')
+    
+    plt.show()
 
 
 
-# a = b = np.arange(-10.0,10.0,1.0)
+
+xgrid, ygrid = np.meshgrid(a, a)
+zgrid = fanc2(xgrid,ygrid)
+
+fig = plt.figure(figsize=(10, 8))
+ax_3d = Axes3D(fig, elev = 47, azim = -43)
+ax_3d.plot_surface(xgrid, ygrid, zgrid, cmap='rainbow', alpha=0.5)
+
+
+for i in range(len(gdhim) - 1):
+    ax_3d.plot(np.linspace(gdhim[i][0], gdhim[i+1][0], 2),np.linspace(gdhim[i][1], gdhim[i+1][1], 2),np.linspace(gdhim[i][2], gdhim[i+1][2], 2), c='brown', alpha = 1)
+
+for i in range(len(gdmhim) - 1):
+    ax_3d.plot(np.linspace(gdmhim[i][0], gdmhim[i+1][0], 2),np.linspace(gdmhim[i][1], gdmhim[i+1][1], 2),np.linspace(gdmhim[i][2], gdmhim[i+1][2], 2), c='blue', alpha = 1)
+
+for i in range(len(agdhim) - 1):
+    ax_3d.plot(np.linspace(agdhim[i][0], agdhim[i+1][0], 2),np.linspace(agdhim[i][1], agdhim[i+1][1], 2),np.linspace(agdhim[i][2], agdhim[i+1][2], 2), c='red', alpha = 1)
+
+
+
+line1, = ax_3d.plot([], [], [], marker='o', markersize=5, markeredgecolor='black', c='brown', alpha = 1, label = 'GD')
+line2, = ax_3d.plot([], [], [], marker='o', markersize=5, markeredgecolor='black', c='blue', alpha = 1, label = 'Momentum')
+line3, = ax_3d.plot([], [], [], marker='o', markersize=5, markeredgecolor='black', c='red', alpha = 1, label = 'Adaptive')
+
+ax_3d.legend(fontsize=12)
+
+def inupd():
+    line1.set_data_3d([], [], [])
+    line2.set_data_3d([], [], [])
+    line3.set_data_3d([], [], [])
+    return line1, line2, line3
+
+def upd(i):
+    x, y, z = gdhim[i][0], gdhim[i][1], gdhim[i][2]
+    line1.set_data_3d(x, y, z)
+    x, y, z = gdmhim[i][0], gdmhim[i][1], gdmhim[i][2]
+    line2.set_data_3d(x, y, z)
+    x, y, z = agdhim[i][0], agdhim[i][1], agdhim[i][2]
+    line3.set_data_3d(x, y, z)
+    return line1, line2, line3
+
+anim = animation.FuncAnimation(fig, upd, np.arange(1,len(gdmhim)-1), init_func=inupd, interval=120, blit=False, repeat_delay=100000)
+
+plt.close()
+anim.save('anim.gif')
+video = anim.to_html5_video()
+html = display.HTML(video)
+    
+display.display(html)
+
+
+
+
+
+
+a = b = np.arange(-5.0,5.0,0.1)
+
+xgrid, ygrid = np.meshgrid(a, b)
+zgrid = func2(xgrid,ygrid)
+
+fig = plt.figure(figsize=(10, 8))
+
+ax_3d = Axes3D(fig, elev = 47, azim = -43)
+ax_3d.plot_surface(xgrid, ygrid, zgrid, cmap='rainbow', alpha=0.5)
+
+plt.show()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#a = b = np.arange(-10.0,10.0,1.0)
 # # x0 = randint(-10,10)
 # # y0 = randint(-10,10)
 x0 = 0
 y0 = 0
 
-# a = b = np.arange(-5.0,5.0,1.0)
+a = b = np.arange(-5.0,5.0,0.1)
 # x0 = randint(-5,5)
 # y0 = randint(-5,5)
 
-a = b = np.arange(-512.0,512.0,1.0)
+#a = b = np.arange(-512.0,512.0,1.0)
 # x0 = randint(-512,512)
 # y0 = randint(-512,512)
 
@@ -63,13 +170,13 @@ plt.ion()
 
 xgrid, ygrid = np.meshgrid(a, b)
 
-zgrid = fanc3(xgrid,ygrid)
+zgrid = fanc2(xgrid,ygrid)
 
 fig = plt.figure(figsize=(10, 8))
 
-ax_3d = Axes3D(fig)
+ax_3d = Axes3D(fig, elev = 47, azim = -43)
 
-ax_3d.plot_surface(xgrid, ygrid, zgrid, cmap='plasma', alpha=0.5)
+ax_3d.plot_surface(xgrid, ygrid, zgrid, cmap='rainbow', alpha=0.5)
 
 
 # обычный спуск
@@ -115,6 +222,7 @@ def GDM(func, dx, dy, LR, LRM, epoh):
         fig.canvas.draw()
         fig.canvas.flush_events()
         time.sleep(0.1)
+        #plt.savefig(f'foo{n}.png')
 
 
     return x0, y0, func(x0, y0) 
@@ -148,10 +256,10 @@ def AGD(func, dx, dy, LR, LRC, LRCV, epoh):
 
 #GD(fanc2, dx2, dy2, 0.01, 15)
 
-#GDM(fanc2, dx2, dy2, 0.05, 0.9, 200)
+GDM(fanc2, dx2, dy2, 0.05, 0.9, 200)
 
-x, y, z = AGD(fanc3, dx3, dy3, 30, 12, 0.8, 100)
-print(x,y,z)
+#x, y, z = AGD(fanc3, dx3, dy3, 30, 12, 0.8, 100)
+#print(x,y,z)
 
 #plt.ioff()
 #plt.show()
